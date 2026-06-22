@@ -121,16 +121,6 @@
           Required="true"
           Mask="true"></Config>
 
-  <Config Name="GM Engine Callback URL"
-          Target="GM_ENGINE_URL"
-          Default="http://host.docker.internal:8000"
-          Mode=""
-          Description="URL of your local GM Engine backend. Used by the LoRA service to write the checkpoint filename into config.toml after download. Leave as default unless you've changed the GM Engine port."
-          Type="Variable"
-          Display="advanced"
-          Required="false"
-          Mask="false">http://host.docker.internal:8000</Config>
-
   <Config Name="CivitAI API Key"
           Target="CIVITAI_API_KEY"
           Default=""
