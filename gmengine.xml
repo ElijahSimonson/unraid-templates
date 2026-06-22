@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<Container version="2">
+
+  <Name>GMEngine</Name>
+  <Repository>ghcr.io/elijahsimonson/gmengine:latest</Repository>
+  <Registry>https://github.com/ElijahSimonson/GMEngine/pkgs/container/gmengine</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/ElijahSimonson/GMEngine/issues</Support>
+  <Project>https://github.com/ElijahSimonson/GMEngine</Project>
+  <Overview>
+    GM Engine — Unraid backend services for the GM Engine roleplay application.
+    Provides embedding model inference (Ollama), image generation (ComfyUI),
+    web search (SearXNG), and optional video generation (Wan2.1).
+    Requires an Nvidia GPU. Models are stored on your cache SSD for fast load times.
+    Install the Nvidia Driver plugin before using this container.
+  </Overview>
+  <Category>AI: Tools:</Category>
+  <WebUI>http://[IP]:[PORT:8188]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/ElijahSimonson/GMEngine/master/docker/gmengine.xml</TemplateURL>
+  <Icon></Icon>
+  <ExtraParams>--runtime=nvidia --gpus all --add-host=host.docker.internal:host-gateway</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires>Nvidia Driver Plugin</Requires>
+
+  <!-- =====================================================================
+       PORTS
+       ===================================================================== -->
+
+  <Config Name="LoRA Download Service Port"
+          Target="8765"
+          Default="8765"
+          Mode="tcp"
+          Description="Internal port for the LoRA download service. Used by GM Engine setup wizard to trigger downloads. No need to change unless port 8765 conflicts."
+          Type="Port"
+          Display="advanced"
+          Required="false"
+          Mask="false">8765</Config>
+
+  <Config Name="Ollama (Embeddings) Port"
+          Target="11435"
+          Default="11435"
+          Mode="tcp"
+          Description="Port for the Ollama embedding model service. Must match the port configured in GM Engine on your local machine."
+          Type="Port"
+          Display="always"
+          Required="true"
+          Mask="false">11435</Config>
+
+  <Config Name="ComfyUI Port"
+          Target="8188"
+          Default="8188"
+          Mode="tcp"
+          Description="Port for the ComfyUI image generation interface. You can also access ComfyUI directly in your browser to install models and test workflows."
+          Type="Port"
+          Display="always"
+          Required="true"
+          Mask="false">8188</Config>
+
+  <Config Name="SearXNG Port"
+          Target="8080"
+          Default="8080"
+          Mode="tcp"
+          Description="Port for the SearXNG web search service."
+          Type="Port"
+          Display="always"
+          Required="true"
+          Mask="false">8080</Config>
+
+  <Config Name="Wan2.1 Port"
+          Target="8189"
+          Default="8189"
+          Mode="tcp"
+          Description="Port for the Wan2.1 video generation service. Only used if Wan2.1 is enabled."
+          Type="Port"
+          Display="advanced"
+          Required="false"
+          Mask="false">8189</Config>
+
+  <!-- =====================================================================
+       VOLUMES
+       ===================================================================== -->
+
+  <Config Name="Model Storage Path"
+          Target="/models"
+          Default="/mnt/cache/appdata/gmengine/models"
+          Mode="rw"
+          Description="Path on your Unraid server where models are stored. STRONGLY RECOMMENDED: use a path on your cache SSD, not the array. Models load significantly faster from SSD. Ollama and ComfyUI models will be stored here."
+          Type="Path"
+          Display="always"
+          Required="true"
+          Mask="false">/mnt/cache/appdata/gmengine/models</Config>
+
+  <Config Name="Output Storage Path"
+          Target="/outputs"
+          Default="/mnt/cache/appdata/gmengine/outputs"
+          Mode="rw"
+          Description="Path where generated images and videos are stored. These are served back to GM Engine on your local machine."
+          Type="Path"
+          Display="always"
+          Required="true"
+          Mask="false">/mnt/cache/appdata/gmengine/outputs</Config>
+
+  <!-- =====================================================================
+       ENVIRONMENT VARIABLES
+       ===================================================================== -->
+
+  <Config Name="SearXNG Secret Key"
+          Target="SEARXNG_SECRET_KEY"
+          Default=""
+          Mode=""
+          Description="A random secret key for SearXNG. Generate any random string of 32+ characters. This is only used internally and never exposed externally."
+          Type="Variable"
+          Display="always"
+          Required="true"
+          Mask="true"></Config>
+
+  <Config Name="GM Engine Callback URL"
+          Target="GM_ENGINE_URL"
+          Default="http://host.docker.internal:8000"
+          Mode=""
+          Description="URL of your local GM Engine backend. Used by the LoRA service to write the checkpoint filename into config.toml after download. Leave as default unless you've changed the GM Engine port."
+          Type="Variable"
+          Display="advanced"
+          Required="false"
+          Mask="false">http://host.docker.internal:8000</Config>
+
+  <Config Name="CivitAI API Key"
+          Target="CIVITAI_API_KEY"
+          Default=""
+          Mode=""
+          Description="Your CivitAI API key for downloading LoRA models. Generate one at civitai.red/user/account under API Keys. Required for the LoRA download step in GM Engine setup."
+          Type="Variable"
+          Display="always"
+          Required="false"
+          Mask="true"></Config>
+
+  <Config Name="Enable Wan2.1 Video Generation"
+          Target="WAN2_ENABLED"
+          Default="true"
+          Mode=""
+          Description="Set to true to enable Wan2.1 video generation. Note: on a P2000, video generation is slow (minutes per clip). ComfyUI image generation is always enabled regardless of this setting."
+          Type="Variable"
+          Display="always"
+          Required="false"
+          Mask="false">true</Config>
+
+  <Config Name="Ollama Model Directory"
+          Target="OLLAMA_MODELS"
+          Default="/models/ollama"
+          Mode=""
+          Description="Path inside the container where Ollama stores models. Leave as default unless you have a specific reason to change it."
+          Type="Variable"
+          Display="advanced"
+          Required="false"
+          Mask="false">/models/ollama</Config>
+
+  <Config Name="ComfyUI Model Directory"
+          Target="COMFYUI_MODEL_DIR"
+          Default="/models/comfyui"
+          Mode=""
+          Description="Path inside the container where ComfyUI looks for checkpoints, LoRAs, and other model files. Leave as default unless you have a specific reason to change it."
+          Type="Variable"
+          Display="advanced"
+          Required="false"
+          Mask="false">/models/comfyui</Config>
+
+</Container>
