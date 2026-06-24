@@ -113,13 +113,13 @@
 
   <Config Name="SearXNG Secret Key"
           Target="SEARXNG_SECRET_KEY"
-          Default=""
+          Default="gm-engine-searxng-internal-secret-a7f3k2p9"
           Mode=""
-          Description="A random secret key for SearXNG. Generate any random string of 32+ characters. This is only used internally and never exposed externally."
+          Description="Internal secret key for SearXNG. The default value is fine — only change it if you want a custom key. Never exposed externally."
           Type="Variable"
-          Display="always"
-          Required="true"
-          Mask="true"></Config>
+          Display="advanced"
+          Required="false"
+          Mask="false">gm-engine-searxng-internal-secret-a7f3k2p9</Config>
 
   <Config Name="CivitAI API Key"
           Target="CIVITAI_API_KEY"
@@ -129,7 +129,7 @@
           Type="Variable"
           Display="always"
           Required="false"
-          Mask="true"></Config>
+          Mask="false"></Config>
 
   <Config Name="Enable Wan2.1 Video Generation"
           Target="WAN2_ENABLED"
