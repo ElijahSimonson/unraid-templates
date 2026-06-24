@@ -20,7 +20,7 @@
   <Category>AI: Tools:</Category>
   <WebUI>http://[IP]:[PORT:8188]/</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/ElijahSimonson/GMEngine/master/docker/gmengine.xml</TemplateURL>
-  <Icon></Icon>
+  <Icon>https://raw.githubusercontent.com/ElijahSimonson/unraid-templates/main/gmengine.png</Icon>
   <ExtraParams>--runtime=nvidia --gpus all --add-host=host.docker.internal:host-gateway</ExtraParams>
   <PostArgs/>
   <CPUset/>
